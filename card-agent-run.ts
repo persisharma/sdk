@@ -1,3 +1,4 @@
+import "dotenv/config";
 // RUNTIME — Research a credit card's reward profile via managed agent
 // Usage: npx tsx card-agent-run.ts "ICICI Emeralde Private Metal"
 import Anthropic from "@anthropic-ai/sdk";

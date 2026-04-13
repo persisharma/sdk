@@ -1,3 +1,4 @@
+import "dotenv/config";
 // ONE-TIME SETUP — run once, save the IDs to .env
 import Anthropic from "@anthropic-ai/sdk";
 

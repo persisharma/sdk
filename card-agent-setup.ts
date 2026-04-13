@@ -1,3 +1,4 @@
+import "dotenv/config";
 // ONE-TIME SETUP — Card Data Pipeline Agent
 // Run once, save the IDs. Reuse the existing environment.
 import Anthropic from "@anthropic-ai/sdk";

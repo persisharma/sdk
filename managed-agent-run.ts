@@ -1,3 +1,4 @@
+import "dotenv/config";
 // RUNTIME — run this for each research task
 import Anthropic from "@anthropic-ai/sdk";
 import fs from "fs";
