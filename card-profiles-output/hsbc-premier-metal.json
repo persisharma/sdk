@@ -1,0 +1,532 @@
+{
+  "id": "hsbc-premier-metal",
+  "name": "HSBC Premier Metal Credit Card",
+  "issuer": "HSBC",
+  "network": "Mastercard",
+  "variant": "Premier Metal",
+  "annualFee": 20000,
+  "joiningFee": 12000,
+  "feeWaiverSpend": null,
+  "feeWaiverNote": "Annual fee waived for customers maintaining HSBC Premier banking relationship (₹40L quarterly TRB or ₹3L/month salary credit). No spend-based waiver.",
+  "pointValueINR": 1,
+  "matchIssuer": "hsbc",
+  "matchVariant": "premier-metal",
+  "tier": "super-premium",
+  "rules": [
+    {
+      "category": "all",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "notes": "3 RP per ₹100 spent on all eligible categories. Reward points never expire."
+    },
+    {
+      "category": "fuel",
+      "baseRateType": "points",
+      "baseRate": 0,
+      "notes": "Fuel (MCC 5541, 5983, 5172, 5542, 5552) earns 0 reward points. 1% fuel surcharge waiver applicable on transactions ₹400–₹4,000 but without reward points."
+    },
+    {
+      "category": "cash_advance",
+      "baseRateType": "points",
+      "baseRate": 0,
+      "notes": "Cash advances earn 0 reward points."
+    },
+    {
+      "category": "emi",
+      "baseRateType": "points",
+      "baseRate": 0,
+      "notes": "Instant EMI (iEMI) transactions earn 0 reward points. Points not reinstated on EMI cancellation or pre-closure."
+    },
+    {
+      "category": "fees_charges",
+      "baseRateType": "points",
+      "baseRate": 0,
+      "notes": "Card fees, charges, and disputed transactions earn 0 reward points."
+    },
+    {
+      "category": "utility",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Utility (MCC 4900) earns 3 RP/₹100, but combined with other capped categories up to ₹1L/month cumulative spend (max 3,000 RP/month from entire capped group). Effective April 1, 2025."
+    },
+    {
+      "category": "insurance",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Insurance (MCC 6300, 5960) earns 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "tax_payment",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Tax payments (MCC 9311) earn 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "education_government",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Education & Government (MCC 9399, 8299, 8220, 8211, 8241, 8244, 8249, 9222, 9402, 9211, 9405) earn 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "wallet",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "E-wallet loads (MCC 6540) earn 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "jewelry",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Jewelry (MCC 5944, 5094) earns 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "money_transfer",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Money Transfer (MCC 4829) earns 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "non_financial_institutions",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Non-Financial Institutions (MCC 6051) earn 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "real_estate",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Real Estate Agents & Managers (MCC 6513) earn 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "financial_institutions",
+      "baseRateType": "points",
+      "baseRate": 0.03,
+      "rewardCapMonthly": 3000,
+      "capGroupId": "hsbc-premier-capped-misc",
+      "notes": "Financial Institutions (MCC 6011, 6012, 6010) earn 3 RP/₹100 within combined ₹1L/month capped group limit."
+    },
+    {
+      "category": "travel",
+      "merchantIncludes": "hsbc-marketplace-hotels",
+      "baseRateType": "points",
+      "baseRate": 0.36,
+      "rewardCapMonthly": 18000,
+      "capGroupId": "hsbc-premier-travel-portal",
+      "notes": "12X accelerated points on hotel bookings via HSBC Rewards Marketplace (Travel with Points, powered by Hopper). 12 × 3 RP/₹100 = 36 RP/₹100. Accelerated cap of 18,000 RP/month shared across hotels, flights, and car rentals. Base points remain uncapped."
+    },
+    {
+      "category": "travel",
+      "merchantIncludes": "hsbc-marketplace-flights",
+      "baseRateType": "points",
+      "baseRate": 0.18,
+      "rewardCapMonthly": 18000,
+      "capGroupId": "hsbc-premier-travel-portal",
+      "notes": "6X accelerated points on flight bookings via HSBC Rewards Marketplace. 6 × 3 RP/₹100 = 18 RP/₹100. Accelerated cap of 18,000 RP/month shared with hotels and car rentals portal cap."
+    },
+    {
+      "category": "travel",
+      "merchantIncludes": "hsbc-marketplace-car-rental",
+      "baseRateType": "points",
+      "baseRate": 0.06,
+      "rewardCapMonthly": 18000,
+      "capGroupId": "hsbc-premier-travel-portal",
+      "notes": "2X accelerated points on car rental bookings via HSBC Rewards Marketplace. 2 × 3 RP/₹100 = 6 RP/₹100. Accelerated cap shared with hotels and flights."
+    },
+    {
+      "category": "entertainment",
+      "merchantIncludes": "bookmyshow",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Buy One Get One (BOGO) movie ticket offer on BookMyShow, valid all 7 days of the week. No cap on ticket value (valid even on recliners/premium seats). On Saturdays, first 2,000 bookings avail the offer; after exhaustion, offer is available on other weekdays."
+    },
+    {
+      "category": "dining",
+      "merchantIncludes": "eazydiner",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "30% instant discount on dining bill via EazyDiner app at PayEazy-enabled restaurants, up to ₹1,500 per bill. Complimentary EazyDiner Prime annual membership included as welcome benefit."
+    },
+    {
+      "category": "lounge",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Unlimited complimentary domestic and international airport lounge access for primary and add-on cardholders via Priority Pass (1,400+ lounges globally). 8 complimentary international guest visits per card anniversary year. No domestic guest access. Add-on cards get unlimited personal access but no guest visits."
+    },
+    {
+      "category": "golf",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Golf benefits via HSBC Premier banking relationship (The Golf League app): Qualified Premier customers — 24 complimentary golf games + 12 lessons per year (capped at 2 games and 2 lessons/month), 4 guest games/lessons/year, 2 international games/year. Other Premier customers — 6 games + 2 lessons/year. Complimentary cart and driving range access included."
+    },
+    {
+      "category": "travel_insurance",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Complimentary international travel insurance covering lost luggage, flight delays, travel document loss, and medical emergencies abroad."
+    },
+    {
+      "category": "fuel_surcharge_waiver",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "1% fuel surcharge waiver at all fuel stations across India on transactions between ₹400 and ₹4,000 per transaction. No reward points earned on fuel transactions."
+    },
+    {
+      "category": "lost_card_insurance",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Lost/stolen card liability cover up to ₹3,00,000 covering misuse from 24 hours before reporting through 7 days after reporting. Provided by ICICI Lombard General Insurance Company Limited."
+    },
+    {
+      "category": "concierge",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "24/7 global concierge service for travel bookings, reservations, and general lifestyle requests."
+    },
+    {
+      "category": "hotel_privileges",
+      "merchantIncludes": "mastercard-hotels",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Mastercard World benefits: complimentary upgrades, early check-in/late check-out at 3,800+ luxury hotel destinations worldwide. Savings at Marina Bay Sands, GHA Discovery, Brilliant by Langham and more."
+    },
+    {
+      "category": "hotel_booking",
+      "merchantIncludes": "agoda",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "Up to 20% discount on hotel bookings via Agoda when using HSBC Premier Credit Card."
+    },
+    {
+      "category": "shopping",
+      "merchantIncludes": "bicester-collection",
+      "baseRateType": "offer",
+      "baseRate": 0,
+      "notes": "VIP guest experiences, eVIP pass discounts, hands-free shopping, private sale events, and reserved parking at The Bicester Collection Villages."
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Welcome Bonus — 20,000 Reward Points on first transaction",
+      "spendThreshold": 0,
+      "bonusType": "points",
+      "bonusValue": 20000,
+      "periodType": "one-time",
+      "notes": "Earn 20,000 RP when you make your first transaction within 30 days of card issuance. Fuel transactions included. Points credited within 3 days of first eligible transaction. Valid for cards issued between October 2025 – December 2026 per current T&C."
+    },
+    {
+      "name": "Welcome Gift — Taj Epicure Membership + Taj Experiences Gift Card ₹12,000",
+      "spendThreshold": 0,
+      "bonusType": "voucher",
+      "bonusValue": 12000,
+      "periodType": "one-time",
+      "notes": "On card activation: complimentary Taj Epicure Membership at Taj Hotels, ₹12,000 Taj Experiences Gift Card (usable across IHCL properties: Taj, SeleQtions, Gateway, Vivanta, amã Stays & Trails), and complimentary EazyDiner Prime annual membership."
+    }
+  ],
+  "redemptionOptions": [
+    {
+      "type": "portal",
+      "name": "Apple Imagine Vouchers",
+      "portal": "hsbc-rewards-marketplace",
+      "category": "electronics",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1,
+      "notes": "1 reward point = ₹1 on Apple products via Imagine vouchers. Best-in-class redemption on this card. Minimum voucher value ₹50,000 (requires ~₹16.7L spend to accumulate). Redeemable via HSBC India Mobile Banking App."
+    },
+    {
+      "type": "portal",
+      "name": "Travel Redemption — Hotels (Travel with Points)",
+      "portal": "hsbc-travel-with-points",
+      "category": "hotels",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1,
+      "notes": "1 RP = ₹1 towards hotel bookings on HSBC Rewards Marketplace (Travel with Points, powered by Hopper). All bookings priced in INR, no forex fees. Best price guarantee (price difference refunded as travel credits up to ₹1,500). Cancel for any reason up to 3 hours before — 100% refund."
+    },
+    {
+      "type": "portal",
+      "name": "Travel Redemption — Flights (Travel with Points)",
+      "portal": "hsbc-travel-with-points",
+      "category": "flights",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1,
+      "notes": "1 RP = ₹1 towards flight bookings on HSBC Rewards Marketplace. Convenience fee: ₹300 domestic, ₹700 international (per customer per leg). Price drop protection for 10 days post-booking (up to ₹1,500 refund in travel credits). Cancel for any reason up to 3 hours before departure."
+    },
+    {
+      "type": "portal",
+      "name": "Gift Cards — Retail/Dining/Entertainment",
+      "portal": "hsbc-rewards-marketplace",
+      "category": "gift_cards",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.5,
+      "notes": "Redeem points for gift cards across food, entertainment, and fashion brands. Effective value typically ~₹0.5 per point. Instant delivery via app."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Air India — Maharaja Club",
+      "partner": "Air India",
+      "partnerProgram": "Maharaja Club",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.5,
+      "notes": "1 HSBC RP = 1 Maharaja Club mile. Transfers complete within 5 working days. Good for domestic Indian routes."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "AirAsia — airasia rewards",
+      "partner": "AirAsia",
+      "partnerProgram": "airasia rewards",
+      "conversionRatio": 3,
+      "effectiveValueINR": 0.6,
+      "notes": "1 HSBC RP = 3 AirAsia miles (best ratio among partners). Transfers instant or within 1 working day."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Air France–KLM — Flying Blue",
+      "partner": "Air France-KLM",
+      "partnerProgram": "Flying Blue",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1.2,
+      "notes": "1 HSBC RP = 1 Flying Blue mile. Useful for European destinations and SkyTeam partners."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "British Airways — Executive Club (Avios)",
+      "partner": "British Airways",
+      "partnerProgram": "The British Airways Club (Avios)",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1.5,
+      "notes": "1 HSBC RP = 1 Avios. Excellent for short-haul redemptions (Avios Distance-Based pricing). Transfers instant or within 1 working day."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Etihad Airways — Etihad Guest",
+      "partner": "Etihad Airways",
+      "partnerProgram": "Etihad Guest",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1,
+      "notes": "1 HSBC RP = 1 Etihad Guest mile."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "EVA Air — Infinity MileageLands",
+      "partner": "EVA Air",
+      "partnerProgram": "Infinity MileageLands",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.8,
+      "notes": "1 HSBC RP = 1 Infinity MileageLands mile."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Hainan Airlines — Fortune Wings Club",
+      "partner": "Hainan Airlines",
+      "partnerProgram": "Hainan Airlines Fortune Wings Club",
+      "conversionRatio": 0.5,
+      "effectiveValueINR": 0.4,
+      "notes": "2 HSBC RP = 1 Fortune Wings mile (least favourable airline ratio). Transfers completed within 5 working days."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Japan Airlines — JAL Mileage Bank",
+      "partner": "Japan Airlines",
+      "partnerProgram": "JAL Mileage Bank",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1.2,
+      "notes": "1 HSBC RP = 1 JAL mile. Transfers completed within 10 working days."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Singapore Airlines — KrisFlyer",
+      "partner": "Singapore Airlines",
+      "partnerProgram": "Singapore Airlines KrisFlyer",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1.5,
+      "notes": "1 HSBC RP = 1 KrisFlyer mile. One of the most valuable transfer options. Transfers instant or within 1 working day."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Qantas — Frequent Flyer",
+      "partner": "Qantas Airways",
+      "partnerProgram": "Qantas Frequent Flyer",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1,
+      "notes": "1 HSBC RP = 1 Qantas point."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Qatar Airways — Privilege Club",
+      "partner": "Qatar Airways",
+      "partnerProgram": "Qatar Airways Privilege Club",
+      "conversionRatio": 1,
+      "effectiveValueINR": 1.2,
+      "notes": "1 HSBC RP = 1 Qatar Avios (Privilege Club). Strong for QSuites premium redemptions."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Thai Airways — Royal Orchid Plus",
+      "partner": "Thai Airways",
+      "partnerProgram": "Royal Orchid Plus",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.8,
+      "notes": "1 HSBC RP = 1 Royal Orchid Plus mile."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Turkish Airlines — Miles&Smiles",
+      "partner": "Turkish Airlines",
+      "partnerProgram": "Turkish Airlines Miles&Smiles",
+      "conversionRatio": 0.5,
+      "effectiveValueINR": 0.6,
+      "notes": "2 HSBC RP = 1 Miles&Smiles mile. Turkish miles are valuable for Star Alliance partner redemptions."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "United Airlines — MileagePlus",
+      "partner": "United Airlines",
+      "partnerProgram": "United MileagePlus",
+      "conversionRatio": 0.5,
+      "effectiveValueINR": 0.5,
+      "notes": "2 HSBC RP = 1 MileagePlus mile."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Vietnam Airlines — Lotusmiles",
+      "partner": "Vietnam Airlines",
+      "partnerProgram": "Vietnam Airlines Lotusmiles",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.7,
+      "notes": "1 HSBC RP = 1 Lotusmiles mile."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Accor — ALL (Accor Live Limitless)",
+      "partner": "Accor",
+      "partnerProgram": "ALL – Accor Live Limitless",
+      "conversionRatio": 1,
+      "effectiveValueINR": 2,
+      "notes": "1 HSBC RP = 1 ALL point. Best hotel transfer: 2,000 ALL points = EUR 40 (~₹3,560 at Dec 2024 rates). Combined with 12X portal earn (36 RP/₹100), can yield up to ~72% Accor value on hotel spend. Usable at 5,000+ Accor properties."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "IHG Hotels & Resorts — IHG One Rewards",
+      "partner": "IHG Hotels & Resorts",
+      "partnerProgram": "IHG One Rewards",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.5,
+      "notes": "1 HSBC RP = 1 IHG One Rewards point. 6,000+ IHG hotels globally."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Marriott International — Marriott Bonvoy",
+      "partner": "Marriott International",
+      "partnerProgram": "Marriott Bonvoy",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.7,
+      "notes": "1 HSBC RP = 1 Marriott Bonvoy point. 8,000+ Marriott properties globally."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Shangri-La — Shangri-La Circle",
+      "partner": "Shangri-La",
+      "partnerProgram": "Shangri-La Circle",
+      "conversionRatio": 0.2,
+      "effectiveValueINR": 0.3,
+      "notes": "5 HSBC RP = 1 Shangri-La Circle point. Least favourable hotel transfer ratio."
+    },
+    {
+      "type": "transfer_partner",
+      "name": "Wyndham Hotels & Resorts — Wyndham Rewards",
+      "partner": "Wyndham Hotels & Resorts",
+      "partnerProgram": "Wyndham Rewards",
+      "conversionRatio": 1,
+      "effectiveValueINR": 0.5,
+      "notes": "1 HSBC RP = 1 Wyndham Rewards point. 60,000+ Wyndham properties worldwide."
+    }
+  ],
+  "capGroups": [
+    {
+      "capGroupId": "hsbc-premier-travel-portal",
+      "description": "Accelerated reward points via HSBC Rewards Marketplace (Travel with Points, powered by Hopper). Shared cap of 18,000 RP/month across hotel, flight, and car rental bookings. Base points (3 RP/₹100) remain uncapped.",
+      "rewardCapMonthly": 18000,
+      "categories": [
+        "hotels",
+        "flights",
+        "car_rentals"
+      ]
+    },
+    {
+      "capGroupId": "hsbc-premier-capped-misc",
+      "description": "Capped spend categories — earn 3 RP/₹100 but cumulative monthly spend across ALL these categories is capped at ₹1,00,000 (max 3,000 RP/month from this entire group). Effective April 1, 2025. MCCs: 9223, 9399, 8299, 8220, 8211, 8241, 8244, 8249, 9222, 9402, 9211, 9405, 6540, 6011, 6012, 6010, 5944, 5094, 4829, 6051, 6513, 9311, 4900, 6300, 5960.",
+      "rewardCapMonthly": 3000,
+      "maxSpendMonthly": 100000,
+      "categories": [
+        "utility",
+        "insurance",
+        "tax_payment",
+        "education_government",
+        "wallet",
+        "jewelry",
+        "money_transfer",
+        "non_financial_institutions",
+        "real_estate",
+        "financial_institutions",
+        "bail_bond"
+      ]
+    }
+  ],
+  "sourceUrls": [
+    "https://www.hsbc.co.in/credit-cards/products/premier/",
+    "https://www.hsbc.co.in/credit-cards/products/premier/rewards/",
+    "https://www.hsbc.co.in/credit-cards/rewards/travel-rewards/",
+    "https://www.hsbc.co.in/content/dam/hsbc/in/documents/premier_cc_tariff_mitc.pdf",
+    "https://cardinsider.com/hsbc-bank/hsbc-premier-mastercard-credit-card/",
+    "https://cardinsider.com/blog/hsbc-premier-credit-card-devaluation/",
+    "https://technofino.in/community/threads/hsbc-premier-credit-card-devaluation-major-rewards-cuts-from-april-2025.38109/",
+    "https://livefromalounge.com/hsbc-premier-devaluation-april-2025/",
+    "https://livefromalounge.com/hsbc-premier-credit-card-devaluation-rolled-back/",
+    "https://livefromalounge.com/hsbc-transfer-partnerships-india/",
+    "https://www.ourmoneyguide.com/credit-cards-in-india/hsbc-premier-credit-card/",
+    "https://www.cardexpert.in/hsbc-premier-credit-card-review/",
+    "https://cardinsider.com/blog/hsbc-launches-all-new-rewards-marketplace/",
+    "https://www.livemint.com/money/personal-finance/hsbc-introduces-20-airline-and-hotel-transfer-partners-for-credit-cards-from-april-2025-details-here-11744783910339.html",
+    "https://www.livemint.com/money/personal-finance/which-hsbc-credit-cards-give-up-to-12x-accelerated-rewards-check-here-11758526826503.html",
+    "https://www.about.hsbc.co.in/-/media/india/en/news-and-media/250514-hsbc-rewards-platform-2025.pdf",
+    "https://www.prnewswire.com/in/news-releases/hsbc-india-unveils-upgraded-rewards-programme-with-20-transfer-partners-302457512.html",
+    "https://www.paisabazaar.com/hsbc-bank/hsbc-bank-premier-credit-card/",
+    "https://magnify.club/guides/hsbc-premier-credit-card-review/",
+    "https://financialy.substack.com/p/unlock-premium-privileges-with-the",
+    "https://www.reddit.com/r/CreditCardsIndia/comments/1is75je/hsbc_premier_devaluation_from_1st_april_2025/",
+    "https://stablemoney.in/credit-card/hsbc-premier-credit-card",
+    "https://savesage.club/blogs/hsbc-premier-credit-card-review",
+    "https://cardmaven.in/hsbc-premier-credit-card/",
+    "https://piceapp.com/blogs/hsbc-credit-card-lounge-access/"
+  ],
+  "lastVerified": "2026-04-11",
+  "confidence": 0.92,
+  "status": "draft",
+  "_notes": {
+    "exclusion_rollback": "Initial April 2025 devaluation announcement excluded bail & bond, education, e-wallets, financial institutions, jewelry, money transfer, non-financial institutions, real estate, tax payments entirely. HSBC subsequently rolled back this change — all these categories now earn at 3% within a combined ₹1L/month cap. Only fuel remains a complete exclusion.",
+    "portal_cap_interpretation": "18,000 RP/month accelerated cap: multiple sources confirm this applies to bonus/accelerated points on the Travel with Points marketplace. Base 3 RP/₹100 continues to accrue uncapped on portal purchases.",
+    "annual_fee_waiver": "Annual fee is waived as long as the HSBC Premier banking relationship criteria are maintained (₹40L quarterly TRB or ₹3L/month salary credit). This is relationship-based, not spend-based. Customers who lose Premier status are charged the full ₹20,000 renewal fee.",
+    "golf_benefit": "Golf benefit (24 games + 12 lessons/year for qualified Premier customers) is tied to HSBC Premier banking relationship, not exclusively to the credit card.",
+    "point_value": "1 RP = ₹1 confirmed at Apple Imagine vouchers (stated by HSBC). Value varies by redemption type: ~₹0.5-1.5 for airline miles (varies by programme), ~₹0.5-2 for hotel points (Accor best at ~₹2).",
+    "forex_markup": "0.99% forex markup — among the lowest of any Indian credit card. Applies to all international transactions globally with no conditions.",
+    "eazydiner_cap": "Official HSBC page states ₹1,500 cap; some aggregator sites cite ₹1,250. Using ₹1,500 from official source.",
+    "taj_benefit_current": "Welcome Taj benefits (Epicure membership + ₹12,000 gift card + EazyDiner Prime) are confirmed joining-time benefits offset against ₹12,000 joining fee. Verify current validity with issuer."
+  }
+}

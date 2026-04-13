@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Credit Card Rewards Ecosystem – Research Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #181b24;
+    --card-border: #262a36;
+    --accent: #6c5ce7;
+    --accent2: #00cec9;
+    --accent3: #fdcb6e;
+    --accent4: #e17055;
+    --accent5: #55efc4;
+    --text: #e4e6ed;
+    --text-dim: #8b8fa3;
+    --text-bright: #ffffff;
+    --green: #00b894;
+    --red: #d63031;
+    --orange: #e17055;
+    --blue: #0984e3;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1a1028 0%, #0f1117 50%, #0a1628 100%);
+    border-bottom: 1px solid var(--card-border);
+    padding: 48px 32px 40px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7, #00cec9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .hero .subtitle {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero .date-badge {
+    display: inline-block;
+    background: rgba(108,92,231,0.15);
+    border: 1px solid rgba(108,92,231,0.3);
+    color: #a29bfe;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 16px;
+  }
+  .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+  .nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    padding: 16px 0;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .nav-pills a {
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-pills a:hover {
+    background: rgba(108,92,231,0.15);
+    border-color: var(--accent);
+    color: var(--text-bright);
+  }
+  .section { margin-bottom: 56px; scroll-margin-top: 80px; }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #a29bfe);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .section-desc {
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    padding-left: 48px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 1100px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-4 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 768px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(108,92,231,0.4); }
+  .card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 12px;
+  }
+  .card p { color: var(--text-dim); font-size: 0.9rem; }
+  .card .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .card .val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-bright);
+  }
+  .card .val.green { color: var(--green); }
+  .card .val.accent { color: var(--accent); }
+  .card .val.orange { color: var(--orange); }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .k { color: var(--text-dim); font-size: 0.88rem; }
+  .stat-row .v { color: var(--text-bright); font-weight: 600; font-size: 0.88rem; }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .badge-green { background: rgba(0,184,148,0.15); color: var(--green); }
+  .badge-orange { background: rgba(225,112,85,0.15); color: var(--orange); }
+  .badge-blue { background: rgba(9,132,227,0.15); color: var(--blue); }
+  .badge-purple { background: rgba(108,92,231,0.15); color: #a29bfe; }
+  .badge-red { background: rgba(214,48,49,0.15); color: var(--red); }
+  .badge-yellow { background: rgba(253,203,110,0.15); color: var(--accent3); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  table th {
+    text-align: left;
+    padding: 12px 14px;
+    background: rgba(108,92,231,0.08);
+    color: var(--text-dim);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+  }
+  table tr:hover td { background: rgba(108,92,231,0.04); }
+  .chart-container {
+    position: relative;
+    height: 320px;
+    margin: 16px 0;
+  }
+  .schema-box {
+    background: #0d0f15;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 20px;
+    font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    color: #a29bfe;
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.7;
+  }
+  .schema-box .key { color: #fdcb6e; }
+  .schema-box .str { color: #55efc4; }
+  .schema-box .num { color: #ff7675; }
+  .schema-box .comment { color: #636e72; }
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .timeline-item .date { color: var(--accent); font-weight: 700; font-size: 0.82rem; }
+  .timeline-item .desc { color: var(--text-dim); font-size: 0.88rem; margin-top: 4px; }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+  }
+  .insight-box {
+    background: rgba(108,92,231,0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .insight-box strong { color: var(--text-bright); }
+  .source-link {
+    color: #74b9ff;
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  .source-link:hover { text-decoration: underline; }
+  .full-width { grid-column: 1 / -1; }
+  .progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-bar .fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 20px;
+  }
+  .flow-node {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .flow-arrow { color: var(--text-dim); font-size: 1.2rem; }
+  .footer {
+    border-top: 1px solid var(--card-border);
+    padding: 32px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+  }
+  .footer a { color: #74b9ff; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🏦 Indian Credit Card Rewards Ecosystem</h1>
+  <p class="subtitle">Comprehensive research for building an automated reward rule extraction system — covering 10 major issuers, reward portals, third-party data sources, change patterns, common structures, and data quality challenges.</p>
+  <div class="date-badge">Research compiled April 2026</div>
+</div>
+
+<div class="container">
+
+<nav class="nav-pills">
+  <a href="#issuers">① Issuers</a>
+  <a href="#portals">② Reward Portals</a>
+  <a href="#third-party">③ Third-Party Sources</a>
+  <a href="#rate-of-change">④ Rate of Change</a>
+  <a href="#patterns">⑤ Common Structures</a>
+  <a href="#data-quality">⑥ Data Quality</a>
+  <a href="#schema">⑦ Schema Design</a>
+  <a href="#architecture">⑧ Extraction Architecture</a>
+</nav>
+
+<!-- ========== SECTION 1: ISSUERS ========== -->
+<section class="section" id="issuers">
+  <div class="section-title"><span class="num">1</span> Major Issuers & Digital Presence</div>
+  <p class="section-desc">Where India's top 10 card issuers publish their reward rules — official pages, PDFs, portals, and T&C documents.</p>
+
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="card" style="text-align:center">
+      <div class="label">Cards in Circulation</div>
+      <div class="val accent">113M+</div>
+      <p style="margin-top:4px">As of Sept 2025 (RBI data)</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="label">Top 4 Banks Share</div>
+      <div class="val green">&gt;70%</div>
+      <p style="margin-top:4px">of total card spends</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="label">Market Leader</div>
+      <div class="val" style="color:var(--accent3)">HDFC</div>
+      <p style="margin-top:4px">~22% of total spends</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="label">Industry Trend</div>
+      <div class="val orange">Devaluation</div>
+      <p style="margin-top:4px">Across all major issuers</p>
+    </div>
+  </div>
+
+  <div class="card" style="overflow-x:auto; margin-bottom:24px">
+    <h3>Issuer Data Source Map</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Issuer</th>
+          <th>Official Rewards Page</th>
+          <th>T&C Format</th>
+          <th>Reward Portal</th>
+          <th>Point Value (₹)</th>
+          <th>Scraping Difficulty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>HDFC Bank</strong></td>
+          <td>hdfcbank.com/personal/pay/cards</td>
+          <td><span class="badge badge-red">PDF</span> + <span class="badge badge-blue">Web</span></td>
+          <td>SmartBuy</td>
+          <td>₹0.25 – ₹1.00</td>
+          <td><span class="badge badge-orange">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>ICICI Bank</strong></td>
+          <td>icicibank.com/card/credit-card</td>
+          <td><span class="badge badge-red">PDF</span> + <span class="badge badge-blue">Web</span></td>
+          <td>iShop Rewards 360</td>
+          <td>₹0.25 – ₹1.00</td>
+          <td><span class="badge badge-orange">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>SBI Card</strong></td>
+          <td>sbicard.com/rewards</td>
+          <td><span class="badge badge-red">PDF</span> + <span class="badge badge-blue">Web</span></td>
+          <td>SBI Rewardz + Gyftr</td>
+          <td>₹0.25</td>
+          <td><span class="badge badge-green">Low</span></td>
+        </tr>
+        <tr>
+          <td><strong>Axis Bank</strong></td>
+          <td>axisbank.com/axis-edge-rewards</td>
+          <td><span class="badge badge-red">PDF</span> + <span class="badge badge-blue">Web</span></td>
+          <td>Grab Deals + Travel EDGE</td>
+          <td>₹0.20 – ₹0.75</td>
+          <td><span class="badge badge-red">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Kotak Mahindra</strong></td>
+          <td>kotak.bank.in/credit-cards</td>
+          <td><span class="badge badge-blue">Web</span></td>
+          <td>kotakrewards.com</td>
+          <td>₹0.07 – ₹0.25</td>
+          <td><span class="badge badge-green">Low</span></td>
+        </tr>
+        <tr>
+          <td><strong>IDFC FIRST</strong></td>
+          <td>idfcfirst.bank.in/credit-card</td>
+          <td><span class="badge badge-blue">Web</span></td>
+          <td>Travel & Shop (in-app)</td>
+          <td>₹0.25 – ₹1.00</td>
+          <td><span class="badge badge-orange">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Amex India</strong></td>
+          <td>americanexpress.co.in</td>
+          <td><span class="badge badge-blue">Web</span></td>
+          <td>Reward Multiplier</td>
+          <td>₹0.25 – ₹0.50</td>
+          <td><span class="badge badge-red">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>RBL Bank</strong></td>
+          <td>rblbank.com/credit-cards</td>
+          <td><span class="badge badge-red">PDF</span></td>
+          <td>RBL Rewards</td>
+          <td>₹0.25 – ₹0.30</td>
+          <td><span class="badge badge-green">Low</span></td>
+        </tr>
+        <tr>
+          <td><strong>IndusInd</strong></td>
+          <td>indusind.com/credit-cards</td>
+          <td><span class="badge badge-red">PDF</span> + <span class="badge badge-blue">Web</span></td>
+          <td>IndusInd Rewards</td>
+          <td>₹0.25 – ₹0.75</td>
+          <td><span class="badge badge-orange">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>HSBC India</strong></td>
+          <td>hsbc.co.in/credit-cards</td>
+          <td><span class="badge badge-blue">Web</span></td>
+          <td>Rewards Marketplace (Hopper)</td>
+          <td>₹0.25 – ₹1.00</td>
+          <td><span class="badge badge-orange">Medium</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📊 Market Share by Card Spends (Sep 2025)</h3>
+      <div class="chart-container">
+        <canvas id="marketShareChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📄 Where Rules Are Published</h3>
+      <p style="margin-bottom:12px">Each issuer publishes reward rules in multiple places, creating a fragmented data landscape:</p>
+      <div class="stat-row"><span class="k">MITC PDFs (Most Important T&C)</span><span class="v badge badge-red">All 10 issuers</span></div>
+      <div class="stat-row"><span class="k">Product feature pages (HTML)</span><span class="v badge badge-blue">All 10 issuers</span></div>
+      <div class="stat-row"><span class="k">Reward portal with rate tables</span><span class="v badge badge-purple">7 of 10</span></div>
+      <div class="stat-row"><span class="k">Accelerated earn rules page</span><span class="v badge badge-green">4 of 10</span></div>
+      <div class="stat-row"><span class="k">In-app only (no web version)</span><span class="v badge badge-orange">3 of 10</span></div>
+      <div class="stat-row"><span class="k">Public API for card data</span><span class="v badge badge-red">0 of 10</span></div>
+      <div class="insight-box" style="margin-top:16px">
+        <strong>Key finding:</strong> HDFC's SmartBuy has a dedicated <a href="https://offers.smartbuy.hdfc.bank.in/v2/accelerated-earn-rules" class="source-link">accelerated-earn-rules page</a> — the closest any Indian issuer comes to structured rate data. No Indian bank offers a public API for rewards data.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 2: REWARD PORTALS ========== -->
+<section class="section" id="portals">
+  <div class="section-title"><span class="num">2</span> Reward Portal Landscape</div>
+  <p class="section-desc">How SmartBuy, iShop, SBI Rewardz, Axis Grab Deals, and other portals are structured. Do they expose merchant/rate listings?</p>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="card">
+      <h3 style="color:#fdcb6e">🛒 HDFC SmartBuy</h3>
+      <p><strong>Market Leader Portal</strong></p>
+      <div class="stat-row"><span class="k">Earn Rate</span><span class="v">Up to 10X RP</span></div>
+      <div class="stat-row"><span class="k">Categories</span><span class="v">Flights, Hotels, Vouchers, Apple, Tanishq</span></div>
+      <div class="stat-row"><span class="k">Monthly Cap (Infinia)</span><span class="v">₹1.5L flights, ₹2L total</span></div>
+      <div class="stat-row"><span class="k">Structured Rate Table</span><span class="v"><span class="badge badge-green">Yes — HTML page</span></span></div>
+      <div class="stat-row"><span class="k">Redemption Mode</span><span class="v">Points + Card payment</span></div>
+      <div class="insight-box">
+        Bonus points are credited within 90 working days. SmartBuy has a public earn-rules page listing per-card multipliers — the best structured data source among all Indian portals.
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="color:#00cec9">🛍️ ICICI iShop Rewards 360</h3>
+      <p><strong>Launched Feb 2025</strong></p>
+      <div class="stat-row"><span class="k">Earn Rate</span><span class="v">Up to 12X hotels, 6X flights</span></div>
+      <div class="stat-row"><span class="k">Best Cards</span><span class="v">Emeralde Private (36%), Times Black (24%)</span></div>
+      <div class="stat-row"><span class="k">Cap (Emeralde)</span><span class="v">18,000 bonus RP/month</span></div>
+      <div class="stat-row"><span class="k">Structured Rate Table</span><span class="v"><span class="badge badge-orange">Partial — via articles</span></span></div>
+      <div class="stat-row"><span class="k">Airmile Transfers</span><span class="v"><span class="badge badge-red">Not supported yet</span></span></div>
+      <div class="insight-box">
+        Redemption value is 1 RP = ₹1 for flights and hotels. 2.5% processing fee applies on Amazon/Flipkart vouchers. Portal has stability issues since launch.
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="color:#e17055">🎁 Axis Bank Grab Deals</h3>
+      <p><strong>+ Travel EDGE + GiftEDGE</strong></p>
+      <div class="stat-row"><span class="k">Earn Rate</span><span class="v">Up to 5X cashback/RP + 20X travel</span></div>
+      <div class="stat-row"><span class="k">Monthly Cap</span><span class="v">₹1,000 CB or 5,000 RP/card</span></div>
+      <div class="stat-row"><span class="k">Structured Rate Table</span><span class="v"><span class="badge badge-red">No — login required</span></span></div>
+      <div class="stat-row"><span class="k">Transfer Partners</span><span class="v">19 airline + hotel programs</span></div>
+      <div class="stat-row"><span class="k">Group A/B caps</span><span class="v">Complex annual limits</span></div>
+      <div class="insight-box">
+        Axis splits transfer partners into Group A and B with separate annual caps. Must authenticate to see rates. GiftEDGE (via Gyftr) adds 10X on vouchers.
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="card">
+      <h3 style="color:#55efc4">🎫 SBI Rewardz</h3>
+      <div class="stat-row"><span class="k">Trusted By</span><span class="v">5M+ users</span></div>
+      <div class="stat-row"><span class="k">Partners</span><span class="v">8,000+ stores</span></div>
+      <div class="stat-row"><span class="k">Redemption</span><span class="v">Vouchers, flights, hotels, recharge</span></div>
+      <div class="stat-row"><span class="k">Gyftr Integration</span><span class="v"><span class="badge badge-green">175+ brands</span></span></div>
+      <div class="stat-row"><span class="k">Redemption Fee</span><span class="v">₹99 + GST per txn</span></div>
+      <p style="margin-top:8px;font-size:0.82rem;color:var(--text-dim)">SBI capping statement credit redemptions at 60,000 points/month from April 2026.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:#a29bfe">🌐 HSBC Rewards Marketplace</h3>
+      <div class="stat-row"><span class="k">Platform Partner</span><span class="v">Hopper (travel)</span></div>
+      <div class="stat-row"><span class="k">Earn Rate</span><span class="v">Up to 12X hotels, 6X flights</span></div>
+      <div class="stat-row"><span class="k">Cap</span><span class="v">18,000 bonus RP/month</span></div>
+      <div class="stat-row"><span class="k">Limitation</span><span class="v"><span class="badge badge-orange">Travel-only redemption</span></span></div>
+      <div class="stat-row"><span class="k">Eligible Cards</span><span class="v">5 (Privé, Premier, TravelOne...)</span></div>
+      <p style="margin-top:8px;font-size:0.82rem;color:var(--text-dim)">Newest portal — launched after ICICI iShop. Competes directly on travel bookings.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:#ffeaa7">⚡ Amex Reward Multiplier</h3>
+      <div class="stat-row"><span class="k">Partners</span><span class="v">Flipkart, MMT, Gyftr, Myntra+</span></div>
+      <div class="stat-row"><span class="k">Earn Rate</span><span class="v">Up to 5X MR points</span></div>
+      <div class="stat-row"><span class="k">Tracking</span><span class="v"><span class="badge badge-orange">URL-based affiliate</span></span></div>
+      <div class="stat-row"><span class="k">Transfer Partners</span><span class="v">Marriott (1:1), InterMiles (2:1)</span></div>
+      <div class="stat-row"><span class="k">Bonus Points Credit</span><span class="v">Up to 120 days</span></div>
+      <p style="margin-top:8px;font-size:0.82rem;color:var(--text-dim)">Most opaque portal — success depends on URL parameters persisting through checkout.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Portal Feature Comparison Matrix</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>SmartBuy (HDFC)</th>
+          <th>iShop (ICICI)</th>
+          <th>Grab Deals (Axis)</th>
+          <th>Rewardz (SBI)</th>
+          <th>Marketplace (HSBC)</th>
+          <th>Multiplier (Amex)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Public rate table</td>
+          <td><span class="badge badge-green">✓ HTML</span></td>
+          <td><span class="badge badge-orange">Partial</span></td>
+          <td><span class="badge badge-red">✗ Login</span></td>
+          <td><span class="badge badge-red">✗ JS App</span></td>
+          <td><span class="badge badge-orange">Partial</span></td>
+          <td><span class="badge badge-red">✗ Opaque</span></td>
+        </tr>
+        <tr>
+          <td>Flights</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>Via MMT</td>
+        </tr>
+        <tr>
+          <td>Hotel bookings</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>Via MMT</td>
+        </tr>
+        <tr>
+          <td>Shopping vouchers</td><td>✓</td><td>✓</td><td>✓</td><td>✓ (Gyftr)</td><td>✗</td><td>✓ (Gyftr)</td>
+        </tr>
+        <tr>
+          <td>Airmile transfers</td><td>✓</td><td><span class="badge badge-red">✗ Not yet</span></td><td>✓ (19 partners)</td><td>Limited</td><td>Limited</td><td>✓</td>
+        </tr>
+        <tr>
+          <td>Per-card caps shown</td><td>✓</td><td>✓</td><td>✗</td><td>✗</td><td>✓</td><td>✗</td>
+        </tr>
+        <tr>
+          <td>Points + pay combo</td><td>70% points max</td><td>60-100%</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== SECTION 3: THIRD-PARTY SOURCES ========== -->
+<section class="section" id="third-party">
+  <div class="section-title"><span class="num">3</span> Third-Party Data Sources</div>
+  <p class="section-desc">Accuracy, depth, and structured data availability across aggregators and community sites.</p>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3>📊 Source Reliability Matrix</h3>
+      <div class="chart-container" style="height:300px">
+        <canvas id="reliabilityChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔑 API Availability</h3>
+      <p style="margin-bottom:16px;color:var(--text-dim)">No Indian-focused credit card rewards API exists. International equivalents:</p>
+      <div class="stat-row"><span class="k">RewardsCC API (US only)</span><span class="v">$49–$499/mo</span></div>
+      <div class="stat-row"><span class="k">Plaid (US)</span><span class="v">No rewards data</span></div>
+      <div class="stat-row"><span class="k">Mastercard APIs</span><span class="v">Card-level only</span></div>
+      <div class="stat-row"><span class="k">Axis Bank API Portal</span><span class="v">Issuance only</span></div>
+      <div class="stat-row"><span class="k">Indian banks — public rewards API</span><span class="v"><span class="badge badge-red">None exist</span></span></div>
+      <div class="insight-box" style="margin-top:12px">
+        <strong>Implication:</strong> Any automated extraction system must rely on web scraping, PDF parsing, and manual verification. There is no programmatic shortcut for Indian card data.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="overflow-x:auto; margin-bottom:24px">
+    <h3>Detailed Source Assessment</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Type</th>
+          <th>Coverage</th>
+          <th>Update Speed</th>
+          <th>Accuracy</th>
+          <th>Structured?</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CardExpert.in</strong></td>
+          <td>Enthusiast blog</td>
+          <td>250+ cards analyzed</td>
+          <td><span class="badge badge-green">Days</span></td>
+          <td><span class="badge badge-green">High</span></td>
+          <td>No — editorial</td>
+          <td>Deep reviews, real-user validation</td>
+        </tr>
+        <tr>
+          <td><strong>CardInsider.com</strong></td>
+          <td>Comparison + news</td>
+          <td>All major issuers</td>
+          <td><span class="badge badge-green">Days</span></td>
+          <td><span class="badge badge-green">High</span></td>
+          <td>Semi — tables in HTML</td>
+          <td>Earn rates, portal updates, devaluation alerts</td>
+        </tr>
+        <tr>
+          <td><strong>PaisaBazaar</strong></td>
+          <td>Aggregator/lead-gen</td>
+          <td>Broad — all banks</td>
+          <td><span class="badge badge-orange">Weeks</span></td>
+          <td><span class="badge badge-orange">Medium</span></td>
+          <td>Semi — comparison tables</td>
+          <td>Fee data, eligibility, broad comparisons</td>
+        </tr>
+        <tr>
+          <td><strong>BankBazaar</strong></td>
+          <td>Aggregator/lead-gen</td>
+          <td>Broad — all banks</td>
+          <td><span class="badge badge-orange">Weeks</span></td>
+          <td><span class="badge badge-orange">Medium</span></td>
+          <td>Semi — comparison tables</td>
+          <td>Product listings, co-branded cards</td>
+        </tr>
+        <tr>
+          <td><strong>CardTrail.in</strong></td>
+          <td>New blog + tools</td>
+          <td>15+ cards (calculators)</td>
+          <td><span class="badge badge-green">Days</span></td>
+          <td><span class="badge badge-green">High</span></td>
+          <td>Yes — calculators with values</td>
+          <td>Point values, devaluation tracking</td>
+        </tr>
+        <tr>
+          <td><strong>CRED</strong></td>
+          <td>Fintech app</td>
+          <td>All issuers (bill pay)</td>
+          <td><span class="badge badge-orange">Variable</span></td>
+          <td><span class="badge badge-orange">Medium</span></td>
+          <td>No — in-app only</td>
+          <td>CRED coins offers, not card rewards</td>
+        </tr>
+        <tr>
+          <td><strong>TechnoFino</strong></td>
+          <td>Community forum</td>
+          <td>Deep enthusiast</td>
+          <td><span class="badge badge-green">Hours</span></td>
+          <td><span class="badge badge-green">High</span></td>
+          <td>No — forum threads</td>
+          <td>Transfer ratios, workarounds, data points</td>
+        </tr>
+        <tr>
+          <td><strong>r/CreditCardsIndia</strong></td>
+          <td>Reddit community</td>
+          <td>Current events</td>
+          <td><span class="badge badge-green">Hours</span></td>
+          <td><span class="badge badge-orange">Variable</span></td>
+          <td>No — unstructured</td>
+          <td>Breaking changes, user experiences</td>
+        </tr>
+        <tr>
+          <td><strong>CashKaro</strong></td>
+          <td>Cashback affiliate</td>
+          <td>Merchants only</td>
+          <td><span class="badge badge-orange">Weeks</span></td>
+          <td><span class="badge badge-green">N/A</span></td>
+          <td>No</td>
+          <td>Merchant cashback (not card rewards)</td>
+        </tr>
+        <tr>
+          <td><strong>Live From A Lounge</strong></td>
+          <td>Travel/loyalty blog</td>
+          <td>Premium cards + travel</td>
+          <td><span class="badge badge-green">Days</span></td>
+          <td><span class="badge badge-green">High</span></td>
+          <td>No — editorial</td>
+          <td>Transfer partner changes, deep analysis</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== SECTION 4: RATE OF CHANGE ========== -->
+<section class="section" id="rate-of-change">
+  <div class="section-title"><span class="num">4</span> Rate of Change & Devaluation Timeline</div>
+  <p class="section-desc">How frequently Indian banks update reward rates, modify caps, add/remove portal merchants, and change exclusions.</p>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3>⏱️ Change Frequency by Category</h3>
+      <div class="chart-container" style="height:280px">
+        <canvas id="changeFreqChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔴 What Triggers Changes?</h3>
+      <div style="margin-top:8px">
+        <div class="stat-row"><span class="k">📊 Rising NPAs / credit costs</span><span class="v">Macro trigger</span></div>
+        <div class="stat-row"><span class="k">🏦 RBI regulatory updates</span><span class="v">Compliance trigger</span></div>
+        <div class="stat-row"><span class="k">💡 Reward arbitrage discovery</span><span class="v">Community-driven</span></div>
+        <div class="stat-row"><span class="k">✈️ Lounge cost inflation</span><span class="v">Vendor economics</span></div>
+        <div class="stat-row"><span class="k">🤝 Partner contract renewals</span><span class="v">Business cycle</span></div>
+        <div class="stat-row"><span class="k">📱 Fintech competition</span><span class="v">Market pressure</span></div>
+        <div class="stat-row"><span class="k">🎉 Festive season</span><span class="v">Temporary boosts</span></div>
+      </div>
+      <div class="insight-box" style="margin-top:12px">
+        <strong>Pattern:</strong> The Indian credit card community actively optimizes rewards (routing insurance, rent, tax payments through cards). Banks like HDFC respond by closing these gaps — creating a cat-and-mouse dynamic that drives 3-6 rule changes per year per major issuer.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3>🗓️ Major Devaluation Timeline (2024–2026)</h3>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--red)"></div>
+      <div><div class="date">Apr 2024</div><div class="desc"><strong>Axis Bank</strong> — Massive devaluation across Atlas, Magnus, Privilege. Group A/B transfer caps introduced. Accelerated categories removed from fuel, insurance, gold, jewellery.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--orange)"></div>
+      <div><div class="date">Oct 2024</div><div class="desc"><strong>HDFC Bank</strong> — Loyalty program and reward point redemption limits revised for specific cards. Amex-Vistara merger eliminates Club Vistara as Amex transfer partner.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--red)"></div>
+      <div><div class="date">Nov 2024</div><div class="desc"><strong>ICICI Bank</strong> — No rewards on government transactions. Fee structure revisions across multiple cards. SBI revises finance charges to 3.75% per month.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--accent3)"></div>
+      <div><div class="date">Feb 2025</div><div class="desc"><strong>ICICI Bank</strong> — Launches iShop Rewards 360 portal (positive change). HDFC SmartBuy continues as benchmark competitor.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--orange)"></div>
+      <div><div class="date">May 2024</div><div class="desc"><strong>IDFC FIRST</strong> — Major devaluation: accelerated online rewards discontinued, base reward rate reduced on Wealth/Select cards.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--red)"></div>
+      <div><div class="date">Jun 2025</div><div class="desc"><strong>HDFC</strong> — Lounge access rules change. No longer automatic — spend thresholds required. Amex removes fuel from Membership Rewards earning.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--red)"></div>
+      <div><div class="date">Jul 2025</div><div class="desc"><strong>HDFC</strong> — 1% fee on rent payments, wallet loads, online gaming. Insurance reward caps by card tier (2K–10K RP/month).</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--orange)"></div>
+      <div><div class="date">Jan 2026</div><div class="desc"><strong>HDFC</strong> — Broader fee/access overhaul. Annual/renewal fees adjusted. Lounge access fully spend-linked. <strong>IDFC FIRST</strong> — Int'l spend rewards cut to 5X (from 10X), base rate moved to ₹200/point.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--red)"></div>
+      <div><div class="date">Feb 2026</div><div class="desc"><strong>HDFC Infinia</strong> — Redemption capped at 5 times/month, 50K points/month for statement credit, ₹1.5L/month for flights/hotels.</div></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--orange)"></div>
+      <div><div class="date">May 2026</div><div class="desc"><strong>HDFC Regalia Gold</strong> — Base earn rate lowered from 4RP/₹150 to 5RP/₹200. Lounge access requires ₹60K quarterly spend from July 2026. <strong>Kotak</strong> — Cash value revised from ₹0.25 to ₹0.20 per point.</div></div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <strong>System design implication:</strong> Reward rules change 3-8 times per year per issuer, with HDFC being the most volatile. An extraction system needs <strong>continuous monitoring</strong> — not just a one-time scrape. Monitoring bank MITC update dates, SmartBuy/iShop pages, and enthusiast blogs (CardExpert, CardInsider) for breaking changes is critical.
+  </div>
+</section>
+
+<!-- ========== SECTION 5: COMMON PATTERNS ========== -->
+<section class="section" id="patterns">
+  <div class="section-title"><span class="num">5</span> Common Reward Structures</div>
+  <p class="section-desc">Repeating patterns across issuers that inform the schema design for an automated extraction system.</p>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3>🔁 Universal Patterns Across Issuers</h3>
+      <table>
+        <thead><tr><th>Pattern</th><th>Prevalence</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Base RP per ₹X spent</td><td><span class="badge badge-green">10/10 issuers</span></td><td>4 RP per ₹150 (HDFC Regalia)</td></tr>
+          <tr><td>Portal multiplier</td><td><span class="badge badge-green">7/10 issuers</span></td><td>10X on SmartBuy (HDFC)</td></tr>
+          <tr><td>Monthly/annual reward caps</td><td><span class="badge badge-green">10/10 issuers</span></td><td>5,000 bonus RP/month (Axis)</td></tr>
+          <tr><td>Fuel exclusion/surcharge waiver</td><td><span class="badge badge-green">10/10 issuers</span></td><td>0 RP on fuel, 1% waiver ₹400-₹5K</td></tr>
+          <tr><td>Category-specific multipliers</td><td><span class="badge badge-purple">8/10 issuers</span></td><td>5X dining, 3X grocery, 2X online</td></tr>
+          <tr><td>Spend threshold unlock</td><td><span class="badge badge-purple">6/10 issuers</span></td><td>10X after ₹20K/month (IDFC)</td></tr>
+          <tr><td>Quarterly milestone vouchers</td><td><span class="badge badge-orange">5/10 issuers</span></td><td>₹1,500 on ₹1.5L quarterly (HDFC)</td></tr>
+          <tr><td>Transfer partners (airlines/hotels)</td><td><span class="badge badge-orange">5/10 issuers</span></td><td>Axis 19 partners, HDFC Marriott</td></tr>
+          <tr><td>Voucher catalog (Gyftr)</td><td><span class="badge badge-orange">4/10 issuers</span></td><td>SBI Card + Gyftr 175+ brands</td></tr>
+          <tr><td>Birthday bonus</td><td><span class="badge badge-purple">6/10 issuers</span></td><td>10X on birthday (IDFC, HDFC)</td></tr>
+          <tr><td>Spend-linked fee waiver</td><td><span class="badge badge-green">9/10 issuers</span></td><td>Waived on ₹4L annual (HDFC Regalia)</td></tr>
+          <tr><td>Welcome benefit vouchers</td><td><span class="badge badge-green">10/10 issuers</span></td><td>₹4,500 vouchers (HDFC DCB)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>💰 Point Value Comparison by Issuer</h3>
+      <div class="chart-container" style="height:300px">
+        <canvas id="pointValueChart"></canvas>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-dim);margin-top:8px">* Range depends on card tier and redemption method. Travel partner redemptions typically yield highest values.</p>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="card">
+      <h3>🚫 Common Exclusion Categories</h3>
+      <p style="margin-bottom:8px;font-size:0.85rem;color:var(--text-dim)">MCC codes that earn 0 points across most issuers:</p>
+      <div class="pill-list">
+        <span class="pill">Fuel (most cards)</span>
+        <span class="pill">Rent payments (BBPS)</span>
+        <span class="pill">Wallet loads (Paytm, MobiKwik)</span>
+        <span class="pill">EMI conversions</span>
+        <span class="pill">Cash advances</span>
+        <span class="pill">Government txns</span>
+        <span class="pill">Online gaming</span>
+        <span class="pill">Gold/Jewellery (Axis)</span>
+        <span class="pill">Insurance (capped)</span>
+        <span class="pill">Education (via 3rd party)</span>
+        <span class="pill">Railways (IDFC capped)</span>
+        <span class="pill">Utility bills (above threshold)</span>
+      </div>
+      <div class="insight-box" style="margin-top:12px">
+        <strong>Extraction challenge:</strong> Exclusions are the hardest to extract — they're buried in MITC PDFs and rarely listed on product pages. IDFC FIRST is a notable exception, earning RP on rent, utility and insurance.
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤝 Transfer Partner Ecosystem</h3>
+      <p style="margin-bottom:8px;font-size:0.85rem;color:var(--text-dim)">Key Indian bank → loyalty program transfer routes:</p>
+      <div class="stat-row"><span class="k">HDFC → Marriott Bonvoy</span><span class="v">Direct card (Bonvoy card)</span></div>
+      <div class="stat-row"><span class="k">HDFC → Singapore Airlines</span><span class="v">SmartBuy KrisFlyer</span></div>
+      <div class="stat-row"><span class="k">Axis → 19 airlines/hotels</span><span class="v">Group A + B caps</span></div>
+      <div class="stat-row"><span class="k">Amex → Marriott Bonvoy</span><span class="v">1:1 (best ratio)</span></div>
+      <div class="stat-row"><span class="k">Amex → InterMiles</span><span class="v">2:1 ratio</span></div>
+      <div class="stat-row"><span class="k">SBI → Cathay Pacific</span><span class="v">Recently added</span></div>
+      <div class="stat-row"><span class="k">All → Air India (Maharaja Club)</span><span class="v">Co-brand cards coming</span></div>
+      <p style="font-size:0.78rem;color:var(--text-dim);margin-top:8px">Marriott transfers at 3:1 ratio with 5K bonus per 60K. Always transfer in multiples of 60K.</p>
+    </div>
+    <div class="card">
+      <h3>📐 Base Earn Rate Patterns</h3>
+      <p style="margin-bottom:8px;font-size:0.85rem;color:var(--text-dim)">Common formulas across Indian cards:</p>
+      <div class="schema-box" style="font-size:0.78rem;line-height:1.6">
+<span class="comment">// Pattern 1: Fixed RP per ₹X</span>
+<span class="key">earn</span>: <span class="num">4</span> RP / ₹<span class="num">150</span> = <span class="str">2.67%</span>
+
+<span class="comment">// Pattern 2: Tiered by spend threshold</span>
+<span class="key">below ₹20K</span>: <span class="num">3</span>X (<span class="str">0.50%</span>)
+<span class="key">above ₹20K</span>: <span class="num">10</span>X (<span class="str">1.67%</span>)
+
+<span class="comment">// Pattern 3: Category multiplier</span>
+<span class="key">dining</span>:  <span class="num">5</span>X base
+<span class="key">grocery</span>: <span class="num">3</span>X base
+<span class="key">all</span>:     <span class="num">1</span>X base
+
+<span class="comment">// Pattern 4: Portal accelerated</span>
+<span class="key">smartbuy_hotel</span>: <span class="num">10</span>X
+<span class="key">smartbuy_flight</span>: <span class="num">10</span>X
+<span class="key">cap</span>: <span class="num">15000</span> bonus RP/month
+
+<span class="comment">// Pattern 5: Cashback (direct %)</span>
+<span class="key">online</span>:  <span class="num">5</span>% up to ₹<span class="num">1000</span>
+<span class="key">offline</span>: <span class="num">1</span>% up to ₹<span class="num">500</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 6: DATA QUALITY ========== -->
+<section class="section" id="data-quality">
+  <div class="section-title"><span class="num">6</span> Data Quality Challenges</div>
+  <p class="section-desc">Where conflicting information comes from, which sources go stale, and what rules are hardest to extract accurately.</p>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3>⚠️ Conflict Sources</h3>
+      <div class="chart-container" style="height:300px">
+        <canvas id="conflictChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🎯 Extraction Difficulty by Rule Type</h3>
+      <table>
+        <thead><tr><th>Rule Type</th><th>Difficulty</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Annual fee</td><td><span class="badge badge-green">Easy</span></td><td>Clearly stated on product pages</td></tr>
+          <tr><td>Base earn rate</td><td><span class="badge badge-green">Easy</span></td><td>On product pages (X RP per ₹Y)</td></tr>
+          <tr><td>Welcome benefits</td><td><span class="badge badge-green">Easy</span></td><td>Prominent marketing feature</td></tr>
+          <tr><td>Fuel surcharge waiver</td><td><span class="badge badge-orange">Medium</span></td><td>Range conditions (₹400-₹5K etc.)</td></tr>
+          <tr><td>Portal multipliers</td><td><span class="badge badge-orange">Medium</span></td><td>Varies per card; login required</td></tr>
+          <tr><td>Monthly/daily caps</td><td><span class="badge badge-red">Hard</span></td><td>Buried in MITC PDFs, changes often</td></tr>
+          <tr><td>Category exclusions</td><td><span class="badge badge-red">Hard</span></td><td>MCC-level; in MITC fine print only</td></tr>
+          <tr><td>Transfer partner ratios</td><td><span class="badge badge-red">Hard</span></td><td>Group A/B caps, varying per card</td></tr>
+          <tr><td>Milestone/spend thresholds</td><td><span class="badge badge-red">Hard</span></td><td>Quarterly, annual, rolling — varies</td></tr>
+          <tr><td>Effective point value in ₹</td><td><span class="badge badge-red">Very Hard</span></td><td>Varies by redemption channel</td></tr>
+          <tr><td>Temporary promotional offers</td><td><span class="badge badge-red">Very Hard</span></td><td>Short-lived, targeted, card-specific</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="card" style="border-color:rgba(214,48,49,0.3)">
+      <h3>🔴 Highest Staleness Risk</h3>
+      <p style="margin-bottom:8px">Sources that fall behind first:</p>
+      <div class="stat-row"><span class="k">BankBazaar product pages</span><span class="v">2–6 months lag</span></div>
+      <div class="stat-row"><span class="k">PaisaBazaar comparison tables</span><span class="v">1–3 months lag</span></div>
+      <div class="stat-row"><span class="k">Bank's own product feature pages</span><span class="v">2–8 weeks lag</span></div>
+      <div class="stat-row"><span class="k">Wishfin, Fincash, generic aggregators</span><span class="v">6+ months lag</span></div>
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-top:8px">Aggregators are lead-gen businesses — they update fee data (for affiliate conversions) faster than reward details.</p>
+    </div>
+    <div class="card" style="border-color:rgba(253,203,110,0.3)">
+      <h3>🟡 Common Data Conflicts</h3>
+      <div style="font-size:0.88rem">
+        <p style="margin-bottom:8px"><strong>Point values:</strong> Wishfin says HDFC = ₹1/point; CardInsider says ₹0.50; actual varies by redemption (₹0.20 for catalog, ₹1.00 for SmartBuy flights)</p>
+        <p style="margin-bottom:8px"><strong>Earn rates:</strong> Older articles cite 4RP/₹150 for Regalia Gold; changed to 5RP/₹200 in May 2026</p>
+        <p style="margin-bottom:8px"><strong>Caps:</strong> MITC PDFs may state daily caps while product page shows monthly</p>
+        <p><strong>Exclusions:</strong> Product page says "earn on all retail" while MITC excludes 15+ MCC categories</p>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(0,184,148,0.3)">
+      <h3>🟢 Most Reliable Sources</h3>
+      <div style="font-size:0.88rem">
+        <p style="margin-bottom:8px"><strong>1. Bank MITC PDFs</strong> — Ground truth, but dense and unstandardized</p>
+        <p style="margin-bottom:8px"><strong>2. SmartBuy accelerated-earn page</strong> — Structured, per-card multiplier table</p>
+        <p style="margin-bottom:8px"><strong>3. CardExpert.in</strong> — Enthusiast-verified, 250+ cards, updated within days</p>
+        <p style="margin-bottom:8px"><strong>4. CardTrail.in calculators</strong> — Hardcoded RP values per bank/card</p>
+        <p><strong>5. TechnoFino community</strong> — First to spot changes, real data points</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 7: SCHEMA DESIGN ========== -->
+<section class="section" id="schema">
+  <div class="section-title"><span class="num">7</span> Recommended Schema for Rule Extraction</div>
+  <p class="section-desc">A structured JSON profile format capturing the complexity of Indian credit card rewards.</p>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3>📋 Schema: Card Profile</h3>
+      <div class="schema-box">
+{
+  <span class="key">"id"</span>: <span class="str">"hdfc-regalia-gold"</span>,
+  <span class="key">"issuer"</span>: <span class="str">"HDFC"</span>,
+  <span class="key">"network"</span>: <span class="str">"Visa"</span>,
+  <span class="key">"annualFee"</span>: <span class="num">2500</span>,
+  <span class="key">"feeWaiverSpend"</span>: <span class="num">400000</span>,
+  <span class="key">"feeWaiverPeriod"</span>: <span class="str">"annual"</span>,
+  <span class="key">"pointCurrency"</span>: <span class="str">"HDFC Reward Points"</span>,
+  <span class="key">"pointValueINR"</span>: {
+    <span class="key">"statement_credit"</span>: <span class="num">0.20</span>,
+    <span class="key">"catalog_shopping"</span>: <span class="num">0.25</span>,
+    <span class="key">"smartbuy_flights"</span>: <span class="num">0.50</span>,
+    <span class="key">"smartbuy_hotels"</span>: <span class="num">0.50</span>
+  },
+  <span class="key">"earnRules"</span>: [...],  <span class="comment">// see below</span>
+  <span class="key">"milestones"</span>: [...],
+  <span class="key">"redemptionOptions"</span>: [...],
+  <span class="key">"exclusions"</span>: [...],
+  <span class="key">"lastVerified"</span>: <span class="str">"2026-04-09"</span>,
+  <span class="key">"sourceURLs"</span>: [...]
+}
+      </div>
+    </div>
+    <div class="card">
+      <h3>📋 Schema: Earn Rules Array</h3>
+      <div class="schema-box">
+<span class="key">"earnRules"</span>: [
+  {
+    <span class="key">"category"</span>: <span class="str">"all"</span>,
+    <span class="key">"baseRate"</span>: <span class="num">0.025</span>,
+    <span class="key">"rpPer"</span>: <span class="num">5</span>,
+    <span class="key">"spendPer"</span>: <span class="num">200</span>,
+    <span class="key">"notes"</span>: <span class="str">"5 RP per ₹200"</span>,
+    <span class="key">"effectiveFrom"</span>: <span class="str">"2026-05-15"</span>
+  },
+  {
+    <span class="key">"category"</span>: <span class="str">"travel"</span>,
+    <span class="key">"portal"</span>: <span class="str">"smartbuy"</span>,
+    <span class="key">"multiplier"</span>: <span class="num">10</span>,
+    <span class="key">"baseRate"</span>: <span class="num">0.25</span>,
+    <span class="key">"capType"</span>: <span class="str">"monthly"</span>,
+    <span class="key">"capGroupId"</span>: <span class="str">"hdfc-rg-smartbuy"</span>,
+    <span class="key">"capValueRP"</span>: <span class="num">15000</span>
+  },
+  {
+    <span class="key">"category"</span>: <span class="str">"fuel"</span>,
+    <span class="key">"baseRate"</span>: <span class="num">0</span>,
+    <span class="key">"surchargeWaiver"</span>: {
+      <span class="key">"percent"</span>: <span class="num">1</span>,
+      <span class="key">"minTxn"</span>: <span class="num">400</span>,
+      <span class="key">"maxTxn"</span>: <span class="num">5000</span>,
+      <span class="key">"monthlyCap"</span>: <span class="num">250</span>
+    }
+  }
+],
+<span class="key">"milestones"</span>: [
+  {
+    <span class="key">"spendThreshold"</span>: <span class="num">150000</span>,
+    <span class="key">"period"</span>: <span class="str">"quarterly"</span>,
+    <span class="key">"reward"</span>: <span class="str">"voucher"</span>,
+    <span class="key">"rewardValue"</span>: <span class="num">1500</span>,
+    <span class="key">"brands"</span>: [<span class="str">"M&S"</span>, <span class="str">"Myntra"</span>]
+  }
+]
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3>📋 Schema: Exclusions & Edge Cases (Critical for Accuracy)</h3>
+    <div class="schema-box">
+<span class="key">"exclusions"</span>: [
+  { <span class="key">"mccCategory"</span>: <span class="str">"fuel"</span>, <span class="key">"rpRate"</span>: <span class="num">0</span>, <span class="key">"hasWaiver"</span>: <span class="num">true</span> },
+  { <span class="key">"mccCategory"</span>: <span class="str">"rent"</span>, <span class="key">"rpRate"</span>: <span class="num">0</span>, <span class="key">"feePercent"</span>: <span class="num">1</span>, <span class="key">"feeCap"</span>: <span class="num">4999</span> },
+  { <span class="key">"mccCategory"</span>: <span class="str">"wallet_load"</span>, <span class="key">"rpRate"</span>: <span class="num">0</span>, <span class="key">"feeThreshold"</span>: <span class="num">10000</span> },
+  { <span class="key">"mccCategory"</span>: <span class="str">"gaming_online"</span>, <span class="key">"rpRate"</span>: <span class="num">0</span>, <span class="key">"feePercent"</span>: <span class="num">1</span> },
+  { <span class="key">"mccCategory"</span>: <span class="str">"insurance"</span>, <span class="key">"rpRate"</span>: <span class="str">"base"</span>, <span class="key">"monthlyCap"</span>: <span class="num">5000</span>, <span class="key">"notes"</span>: <span class="str">"Infinia: 10K cap"</span> },
+  { <span class="key">"mccCategory"</span>: <span class="str">"emi_conversion"</span>, <span class="key">"rpRate"</span>: <span class="num">0</span> },
+  { <span class="key">"mccCategory"</span>: <span class="str">"utility_above_50k"</span>, <span class="key">"feePercent"</span>: <span class="num">1</span>, <span class="key">"feeThresholdSpend"</span>: <span class="num">50000</span> }
+],
+<span class="key">"transferPartners"</span>: [
+  { <span class="key">"program"</span>: <span class="str">"Marriott Bonvoy"</span>, <span class="key">"type"</span>: <span class="str">"direct_earn"</span>, <span class="key">"notes"</span>: <span class="str">"Only on Marriott co-brand"</span> },
+  { <span class="key">"program"</span>: <span class="str">"Singapore KrisFlyer"</span>, <span class="key">"via"</span>: <span class="str">"smartbuy"</span>, <span class="key">"ratio"</span>: <span class="str">"varies"</span> }
+],
+<span class="key">"loungeAccess"</span>: {
+  <span class="key">"domestic"</span>: <span class="num">3</span>, <span class="key">"perQuarter"</span>: <span class="num">true</span>,
+  <span class="key">"spendRequired"</span>: <span class="num">60000</span>, <span class="key">"spendPeriod"</span>: <span class="str">"prev_quarter"</span>,
+  <span class="key">"effectiveFrom"</span>: <span class="str">"2026-07-01"</span>
+}
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 8: EXTRACTION ARCHITECTURE ========== -->
+<section class="section" id="architecture">
+  <div class="section-title"><span class="num">8</span> Recommended Extraction Architecture</div>
+  <p class="section-desc">How to build an automated system that produces structured profiles from the fragmented Indian rewards data landscape.</p>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3>🏗️ Data Pipeline Architecture</h3>
+    <div class="flow-diagram" style="flex-direction:column;gap:0">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:16px">
+        <div class="flow-node" style="background:rgba(108,92,231,0.15);border:1px solid var(--accent);color:#a29bfe">Bank MITC PDFs</div>
+        <div class="flow-node" style="background:rgba(0,206,201,0.15);border:1px solid var(--accent2);color:var(--accent2)">Product Web Pages</div>
+        <div class="flow-node" style="background:rgba(253,203,110,0.15);border:1px solid var(--accent3);color:var(--accent3)">SmartBuy / iShop</div>
+        <div class="flow-node" style="background:rgba(225,112,85,0.15);border:1px solid var(--accent4);color:var(--accent4)">CardExpert / CardInsider</div>
+        <div class="flow-node" style="background:rgba(85,239,196,0.15);border:1px solid var(--accent5);color:var(--accent5)">Reddit / TechnoFino</div>
+      </div>
+      <div style="font-size:1.6rem;color:var(--text-dim)">▼</div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:12px 0">
+        <div class="flow-node" style="background:rgba(9,132,227,0.15);border:1px solid var(--blue);color:#74b9ff">PDF Parser (tabula/pdfplumber)</div>
+        <div class="flow-node" style="background:rgba(9,132,227,0.15);border:1px solid var(--blue);color:#74b9ff">Web Scraper (Playwright)</div>
+        <div class="flow-node" style="background:rgba(9,132,227,0.15);border:1px solid var(--blue);color:#74b9ff">LLM Extraction (GPT/Claude)</div>
+      </div>
+      <div style="font-size:1.6rem;color:var(--text-dim)">▼</div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:12px 0">
+        <div class="flow-node" style="background:rgba(253,203,110,0.15);border:1px solid var(--accent3);color:var(--accent3)">Rule Normalizer</div>
+        <div class="flow-node" style="background:rgba(253,203,110,0.15);border:1px solid var(--accent3);color:var(--accent3)">Conflict Resolver</div>
+        <div class="flow-node" style="background:rgba(253,203,110,0.15);border:1px solid var(--accent3);color:var(--accent3)">Schema Validator</div>
+      </div>
+      <div style="font-size:1.6rem;color:var(--text-dim)">▼</div>
+      <div class="flow-node" style="background:rgba(0,184,148,0.15);border:1px solid var(--green);color:var(--green);font-weight:800;font-size:1rem;padding:14px 28px">Structured JSON Card Profiles</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom: 24px">
+    <div class="card">
+      <h3>⚙️ Extraction Strategy by Source</h3>
+      <table>
+        <thead><tr><th>Source</th><th>Method</th><th>Refresh</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>MITC PDFs</td>
+            <td>pdfplumber + LLM parse</td>
+            <td>Monthly</td>
+            <td>Exclusions, caps, fine print</td>
+          </tr>
+          <tr>
+            <td>Product pages</td>
+            <td>Playwright scraper</td>
+            <td>Weekly</td>
+            <td>Fees, base rates, welcome benefits</td>
+          </tr>
+          <tr>
+            <td>SmartBuy earn rules</td>
+            <td>HTML scraper (public)</td>
+            <td>Daily</td>
+            <td>Portal multipliers, per-card caps</td>
+          </tr>
+          <tr>
+            <td>iShop / Grab Deals</td>
+            <td>Authenticated scraper</td>
+            <td>Weekly</td>
+            <td>Accelerated rates, voucher listing</td>
+          </tr>
+          <tr>
+            <td>CardExpert articles</td>
+            <td>RSS + content parser</td>
+            <td>Daily</td>
+            <td>Change alerts, verified data points</td>
+          </tr>
+          <tr>
+            <td>Reddit / TechnoFino</td>
+            <td>API + keyword monitor</td>
+            <td>Hourly</td>
+            <td>Breaking changes, community DPs</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>🧠 LLM-Assisted Extraction Flow</h3>
+      <p style="margin-bottom:12px;font-size:0.88rem;color:var(--text-dim)">For unstructured sources (PDFs, blog articles, forum posts):</p>
+      <div class="stat-row"><span class="k">Step 1</span><span class="v">Extract text from PDF/HTML</span></div>
+      <div class="stat-row"><span class="k">Step 2</span><span class="v">Chunk into per-card, per-rule sections</span></div>
+      <div class="stat-row"><span class="k">Step 3</span><span class="v">LLM extracts structured fields</span></div>
+      <div class="stat-row"><span class="k">Step 4</span><span class="v">Validate against schema</span></div>
+      <div class="stat-row"><span class="k">Step 5</span><span class="v">Cross-reference with existing profile</span></div>
+      <div class="stat-row"><span class="k">Step 6</span><span class="v">Flag conflicts for human review</span></div>
+      <div class="stat-row"><span class="k">Step 7</span><span class="v">Merge confirmed changes</span></div>
+      <div class="insight-box" style="margin-top:12px">
+        <strong>Key insight:</strong> LLMs are excellent at extracting "4 RP per ₹150" → <code>{"rpPer": 4, "spendPer": 150}</code> from natural language. The main challenge is <em>detecting what changed</em> between two versions of a T&C document and determining the effective date.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Estimated Coverage: How Many Rules Can Be Automated?</h3>
+    <div class="chart-container" style="height:280px">
+      <canvas id="automationChart"></canvas>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text-dim);margin-top:8px">Based on analysis of data availability across 10 issuers. "Fully automated" means extractable from public structured sources. "Semi-automated" needs LLM + human review. "Manual" requires reading MITC PDFs or contacting the bank.</p>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <p style="margin-bottom:8px"><strong>Sources & Citations</strong></p>
+  <p>
+    <a href="https://offers.smartbuy.hdfc.bank.in/v2/accelerated-earn-rules">HDFC SmartBuy Earn Rules</a> · 
+    <a href="https://www.paisabazaar.com/credit-card/icici-ishop-vs-hdfc-smartbuy/">PaisaBazaar: iShop vs SmartBuy</a> · 
+    <a href="https://cardinsider.com/">CardInsider.com</a> · 
+    <a href="https://www.cardexpert.in/">CardExpert.in</a> · 
+    <a href="https://cardtrail.in/calculators/reward-point-value-calculator-india/">CardTrail Point Calculator</a> · 
+    <a href="https://www.paisabazaar.com/credit-card/hsbc-rewards-marketplace-vs-ishop-vs-smartbuy/">PaisaBazaar: HSBC Marketplace</a> · 
+    <a href="https://cardtrail.in/news/hdfc-bank-card-changes-2025-2026/">CardTrail: HDFC Changes 2025-26</a> · 
+    <a href="https://economictimes.indiatimes.com/wealth/spend/from-rent-payments-to-gaming-spends-hdfc-bank-revises-transaction-fees-and-reward-limits-from-july-1-2025/articleshow/121516406.cms">ET: HDFC July 2025 Changes</a> · 
+    <a href="https://www.reddit.com/r/IndianCreditCards/">r/IndianCreditCards</a> · 
+    <a href="https://magnify.club/guides/marriott-bonvoy-airline-transfer-partners/">Magnify: Marriott Partners</a>
+  </p>
+  <p style="margin-top:12px;color:var(--text-dim)">Dashboard generated April 2026 · Research for automated reward rule extraction system</p>
+</div>
+
+<script>
+// Market Share Chart
+new Chart(document.getElementById('marketShareChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['HDFC Bank (22%)', 'SBI Card (19%)', 'ICICI Bank (15%)', 'Axis Bank (14%)', 'Kotak (6%)', 'RBL (4%)', 'Others (20%)'],
+    datasets: [{
+      data: [22, 19, 15, 14, 6, 4, 20],
+      backgroundColor: ['#6c5ce7', '#00cec9', '#fdcb6e', '#e17055', '#55efc4', '#74b9ff', '#636e72'],
+      borderWidth: 0,
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: { color: '#8b8fa3', font: { size: 11 }, padding: 12, usePointStyle: true }
+      }
+    }
+  }
+});
+
+// Reliability Chart (radar)
+new Chart(document.getElementById('reliabilityChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Accuracy', 'Update Speed', 'Coverage', 'Structured Data', 'Depth', 'Free Access'],
+    datasets: [
+      {
+        label: 'CardExpert',
+        data: [95, 85, 80, 30, 95, 100],
+        borderColor: '#6c5ce7',
+        backgroundColor: 'rgba(108,92,231,0.1)',
+        pointBackgroundColor: '#6c5ce7'
+      },
+      {
+        label: 'BankBazaar',
+        data: [65, 50, 90, 60, 50, 100],
+        borderColor: '#fdcb6e',
+        backgroundColor: 'rgba(253,203,110,0.1)',
+        pointBackgroundColor: '#fdcb6e'
+      },
+      {
+        label: 'Bank MITC PDFs',
+        data: [100, 70, 100, 10, 100, 100],
+        borderColor: '#e17055',
+        backgroundColor: 'rgba(225,112,85,0.1)',
+        pointBackgroundColor: '#e17055'
+      },
+      {
+        label: 'SmartBuy Earn Page',
+        data: [100, 90, 20, 90, 40, 100],
+        borderColor: '#00cec9',
+        backgroundColor: 'rgba(0,206,201,0.1)',
+        pointBackgroundColor: '#00cec9'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      r: {
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        pointLabels: { color: '#8b8fa3', font: { size: 10 } },
+        ticks: { display: false },
+        min: 0, max: 100
+      }
+    },
+    plugins: {
+      legend: { labels: { color: '#8b8fa3', font: { size: 11 }, usePointStyle: true, padding: 12 } }
+    }
+  }
+});
+
+// Change Frequency Chart
+new Chart(document.getElementById('changeFreqChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Base Earn\nRates', 'Portal\nMultipliers', 'Monthly\nCaps', 'Lounge\nRules', 'Transfer\nPartners', 'Fee\nStructure', 'Exclusion\nList', 'Promo\nOffers'],
+    datasets: [{
+      label: 'Average changes per year per issuer',
+      data: [1.5, 2, 3, 2, 1, 1.5, 2.5, 12],
+      backgroundColor: ['#6c5ce7', '#00cec9', '#e17055', '#fdcb6e', '#55efc4', '#74b9ff', '#ff7675', '#a29bfe'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8b8fa3' }, title: { display: true, text: 'Avg changes/year/issuer', color: '#636e72' } },
+      y: { grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 11 } } }
+    }
+  }
+});
+
+// Point Value Chart
+new Chart(document.getElementById('pointValueChart'), {
+  type: 'bar',
+  data: {
+    labels: ['HDFC\n(Premium)', 'HDFC\n(Mid)', 'ICICI', 'SBI', 'Axis', 'Amex', 'IDFC\nFIRST', 'Kotak', 'IndusInd', 'HSBC'],
+    datasets: [
+      {
+        label: 'Min ₹ per point (catalog/statement)',
+        data: [0.20, 0.20, 0.25, 0.25, 0.20, 0.25, 0.25, 0.07, 0.25, 0.25],
+        backgroundColor: 'rgba(214,48,49,0.6)',
+        borderRadius: 4
+      },
+      {
+        label: 'Max ₹ per point (travel/transfer)',
+        data: [1.00, 0.50, 1.00, 0.25, 0.75, 0.50, 1.00, 0.25, 0.75, 1.00],
+        backgroundColor: 'rgba(0,184,148,0.6)',
+        borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#8b8fa3', font: { size: 11 }, usePointStyle: true, padding: 12 } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 10 } } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8b8fa3' }, title: { display: true, text: '₹ per Reward Point', color: '#636e72' } }
+    }
+  }
+});
+
+// Conflict Sources Chart
+new Chart(document.getElementById('conflictChart'), {
+  type: 'polarArea',
+  data: {
+    labels: ['Point value ambiguity', 'Stale aggregator data', 'MITC vs product page mismatch', 'Cap type confusion (daily/monthly)', 'Effective date uncertainty', 'Co-brand specific rules'],
+    datasets: [{
+      data: [35, 25, 20, 10, 5, 5],
+      backgroundColor: [
+        'rgba(108,92,231,0.5)', 'rgba(225,112,85,0.5)', 'rgba(253,203,110,0.5)',
+        'rgba(0,206,201,0.5)', 'rgba(116,185,255,0.5)', 'rgba(85,239,196,0.5)'
+      ],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { color: '#8b8fa3', font: { size: 10 }, padding: 10, usePointStyle: true } }
+    },
+    scales: {
+      r: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { display: false } }
+    }
+  }
+});
+
+// Automation Coverage Chart
+new Chart(document.getElementById('automationChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Annual Fee', 'Base Earn Rate', 'Welcome Benefits', 'Portal Multipliers', 'Fuel Waiver', 'Transfer Partners', 'Monthly Caps', 'Exclusions/MCC', 'Milestones', 'Effective ₹ Value', 'Promo Offers'],
+    datasets: [
+      {
+        label: 'Fully Automated',
+        data: [95, 90, 85, 70, 60, 40, 30, 15, 25, 10, 5],
+        backgroundColor: 'rgba(0,184,148,0.7)',
+        borderRadius: 4
+      },
+      {
+        label: 'Semi-Automated (LLM + review)',
+        data: [5, 10, 15, 25, 30, 40, 50, 45, 45, 50, 25],
+        backgroundColor: 'rgba(253,203,110,0.7)',
+        borderRadius: 4
+      },
+      {
+        label: 'Manual Only',
+        data: [0, 0, 0, 5, 10, 20, 20, 40, 30, 40, 70],
+        backgroundColor: 'rgba(214,48,49,0.7)',
+        borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#8b8fa3', font: { size: 11 }, usePointStyle: true, padding: 12 } }
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 10 }, maxRotation: 45 } },
+      y: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' }, max: 100 }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
